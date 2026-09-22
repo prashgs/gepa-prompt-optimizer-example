@@ -1,0 +1,22 @@
+[
+  {
+    "input": "Build a todo list SPA with add, complete, and delete. Persist items in localStorage.",
+    "additional_context": {},
+    "answer": "Acceptance criteria"
+  },
+  {
+    "input": "Create a tip calculator page: bill amount, tip percent, split between people, show totals.",
+    "additional_context": {},
+    "answer": "User stories"
+  },
+  {
+    "input": "Make a countdown timer with start, pause, and reset buttons.",
+    "additional_context": {},
+    "answer": "Functional requirements"
+  },
+  {
+    "input": "Quiz app with multiple choice questions and a final score screen.",
+    "additional_context": {},
+    "answer": "non-goals"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "input": "Which worker should turn a product brief into a PRD first?",
+    "additional_context": {},
+    "answer": "requirements"
+  },
+  {
+    "input": "After design is done, which worker writes HTML/CSS/JS?",
+    "additional_context": {},
+    "answer": "implement"
+  },
+  {
+    "input": "If the test report verdict is FAIL, what should happen next?",
+    "additional_context": {},
+    "answer": "implement"
+  },
+  {
+    "input": "Which worker produces the final ship/polish/rework recommendation?",
+    "additional_context": {},
+    "answer": "review"
+  }
+]

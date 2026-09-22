@@ -1,0 +1,22 @@
+[
+  {
+    "input": "Design a todo list SPA: add items, mark complete, delete, persist to localStorage.",
+    "additional_context": {},
+    "answer": "UI components"
+  },
+  {
+    "input": "Design a tip calculator: inputs for bill, tip %, people; display tip and total per person.",
+    "additional_context": {},
+    "answer": "Interaction flows"
+  },
+  {
+    "input": "Design a countdown timer with start, pause, reset and a large time display.",
+    "additional_context": {},
+    "answer": "index.html"
+  },
+  {
+    "input": "Design a flashcard study SPA with flip cards and next/previous navigation.",
+    "additional_context": {},
+    "answer": "Accessibility"
+  }
+]

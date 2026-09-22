@@ -1,0 +1,22 @@
+[
+  {
+    "input": "PRD requires add/complete/delete todos. SPA has only an add button. Write a test finding.",
+    "additional_context": {},
+    "answer": "FAIL"
+  },
+  {
+    "input": "Acceptance criteria all met and localStorage used. Write the overall verdict.",
+    "additional_context": {},
+    "answer": "PASS"
+  },
+  {
+    "input": "List what a static SPA test report must include.",
+    "additional_context": {},
+    "answer": "Acceptance"
+  },
+  {
+    "input": "index.html has no script tag but app.js exists. Report the issue.",
+    "additional_context": {},
+    "answer": "PARTIAL"
+  }
+]

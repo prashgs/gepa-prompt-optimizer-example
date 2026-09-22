@@ -1,0 +1,22 @@
+[
+  {
+    "input": "Summarize a final review for a working tip calculator SPA that passed tests.",
+    "additional_context": {},
+    "answer": "ship"
+  },
+  {
+    "input": "What sections belong in an SDLC review of a generated SPA?",
+    "additional_context": {},
+    "answer": "Strengths"
+  },
+  {
+    "input": "Tests failed on delete todo. Recommend next step.",
+    "additional_context": {},
+    "answer": "rework"
+  },
+  {
+    "input": "App works but has weak contrast. Give a recommendation.",
+    "additional_context": {},
+    "answer": "polish"
+  }
+]

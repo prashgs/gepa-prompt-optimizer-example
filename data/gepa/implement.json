@@ -1,0 +1,22 @@
+[
+  {
+    "input": "Explain how you will structure a vanilla HTML/CSS/JS todo SPA with localStorage.",
+    "additional_context": {},
+    "answer": "app.js"
+  },
+  {
+    "input": "What files will you create for a tip calculator SPA without frameworks?",
+    "additional_context": {},
+    "answer": "index.html"
+  },
+  {
+    "input": "How should event listeners be wired for a countdown timer start/pause/reset?",
+    "additional_context": {},
+    "answer": "addEventListener"
+  },
+  {
+    "input": "Describe a self-contained approach for a quiz SPA scoring answers client-side.",
+    "additional_context": {},
+    "answer": "JavaScript"
+  }
+]

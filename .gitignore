@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project outputs / local GEPA runs
+output/
+artifacts/
+gepa_runs/
+src/sdlc_agents/prompts/optimized/*.txt
+!src/sdlc_agents/prompts/optimized/.gitkeep
