@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 import sys
 
-from sdlc_agents.config import load_settings
+from sdlc_agents.config import load_settings, with_gepa_models
 from sdlc_agents.orchestrator import run_workflow
+from sdlc_agents.roles import optimizable_role_ids
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -30,12 +31,26 @@ def cmd_run(args: argparse.Namespace) -> int:
 def cmd_optimize(args: argparse.Namespace) -> int:
     from sdlc_agents.gepa_optimize import optimize_all_prompts
 
-    settings = load_settings()
+    settings = with_gepa_models(
+        load_settings(),
+        task_lm=args.task_lm,
+        reflection_lm=args.reflection_lm,
+    )
     roles = args.roles or None
-    print(f"Optimizing prompts via GEPA (task={settings.gepa_task_lm}) ...")
+    print("Optimizing prompts via GEPA ...")
+    print(f"  task_lm (evaluated):     {settings.gepa_task_lm}")
+    print(f"  reflection_lm (proposer): {settings.gepa_reflection_lm}")
+    print(f"  max_metric_calls:        {settings.gepa_max_metric_calls}")
+    print(f"  reflection_minibatch:    {settings.gepa_reflection_minibatch_size}")
+    print(f"  candidate_strategy:      {settings.gepa_candidate_selection_strategy}")
+    print(f"  seed:                    {settings.gepa_seed}")
+    print(f"  report_dir:              {settings.gepa_report_dir}")
     written = optimize_all_prompts(settings, roles=roles)
     for path in written:
-        print(f"Wrote {path}")
+        print(f"Wrote prompt: {path}")
+    report = settings.gepa_report_dir / "optimization_report.md"
+    if report.exists():
+        print(f"Wrote report: {report}")
     return 0
 
 
@@ -61,15 +76,30 @@ def build_parser() -> argparse.ArgumentParser:
     opt_p.add_argument(
         "--roles",
         nargs="+",
-        choices=[
-            "requirements",
-            "design",
-            "implement",
-            "test",
-            "review",
-            "orchestrator",
-        ],
-        help="Subset of roles to optimize (default: all workers + orchestrator)",
+        choices=list(optimizable_role_ids()),
+        help=(
+            "Subset of roles to optimize (default: all with optimize=true in "
+            "config/roles.toml)"
+        ),
+    )
+    opt_p.add_argument(
+        "--task-lm",
+        default=None,
+        metavar="MODEL",
+        help=(
+            "LiteLLM / Ollama model used as GEPA task_lm (prompts are optimized for this model). "
+            "Overrides GEPA_TASK_LM. Example: granite4:3b or ollama/granite4:3b"
+        ),
+    )
+    opt_p.add_argument(
+        "--reflection-lm",
+        default=None,
+        metavar="MODEL",
+        help=(
+            "LiteLLM / Ollama model used as GEPA reflection_lm (proposes better prompts). "
+            "Prefer a stronger model than --task-lm. Overrides GEPA_REFLECTION_LM. "
+            "Example: nemotron-mini:4b or ollama/nemotron-mini:4b"
+        ),
     )
     opt_p.set_defaults(func=cmd_optimize)
 

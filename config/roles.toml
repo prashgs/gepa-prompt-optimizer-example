@@ -1,0 +1,56 @@
+# SDLC agent roles — single source of truth for optimize CLI and GEPA defaults.
+# Order is the default pipeline / optimization order.
+
+[[roles]]
+id = "requirements"
+kind = "worker"
+description = "Turn the user brief into a Product Requirements Document (PRD)"
+prompt_file = "requirements"
+gepa_dataset = "requirements.json"
+artifact = "prd.md"
+optimize = true
+
+[[roles]]
+id = "design"
+kind = "worker"
+description = "Produce UI/UX design and file plan from the PRD"
+prompt_file = "design"
+gepa_dataset = "design.json"
+artifact = "design.md"
+optimize = true
+
+[[roles]]
+id = "implement"
+kind = "worker"
+description = "Implement the vanilla HTML/CSS/JS SPA"
+prompt_file = "implement"
+gepa_dataset = "implement.json"
+artifact = ""
+optimize = true
+
+[[roles]]
+id = "test"
+kind = "worker"
+description = "Static acceptance checks against the PRD and SPA source"
+prompt_file = "test"
+gepa_dataset = "test.json"
+artifact = "test_report.md"
+optimize = true
+
+[[roles]]
+id = "review"
+kind = "worker"
+description = "Final quality review and ship/polish/rework recommendation"
+prompt_file = "review"
+gepa_dataset = "review.json"
+artifact = "review.md"
+optimize = true
+
+[[roles]]
+id = "orchestrator"
+kind = "orchestrator"
+description = "Route the brief through SDLC workers in order"
+prompt_file = "orchestrator"
+gepa_dataset = "orchestrator.json"
+artifact = ""
+optimize = true

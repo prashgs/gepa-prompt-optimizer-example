@@ -42,23 +42,37 @@ cp .env.example .env
 
 ## Optimize prompts (offline GEPA)
 
-GEPA improves each worker (and orchestrator) system prompt against small local datasets, using Ollama via LiteLLM (`GEPA_TASK_LM` / `GEPA_REFLECTION_LM`).
+GEPA improves each worker (and orchestrator) system prompt against small local datasets via LiteLLM.
+
+Use **two different models** when you can:
+- **`GEPA_TASK_LM` / `--task-lm`** — model the prompts are optimized *for* (ideally same family as your SDLC worker)
+- **`GEPA_REFLECTION_LM` / `--reflection-lm`** — stronger proposer that rewrites prompts (can differ from task and from runtime agents)
 
 ```bash
-# All roles (budget controlled by GEPA_MAX_METRIC_CALLS)
+# Defaults from .env (GEPA_TASK_LM / GEPA_REFLECTION_LM)
 uv run sdlc-agents optimize
-# or
-uv run python -m sdlc_agents.cli optimize
 
-# Or a subset
-uv run sdlc-agents optimize --roles requirements implement
+# Override models on the CLI (bare Ollama names or ollama/<name>)
+uv run sdlc-agents optimize \
+  --task-lm granite4:3b \
+  --reflection-lm nemotron-mini:4b
 
-# Equivalent script
-uv run python scripts/optimize_prompts.py
+# Subset of roles
+uv run sdlc-agents optimize --roles requirements implement \
+  --task-lm ollama/granite4:3b \
+  --reflection-lm ollama/nemotron-mini:4b
+
+# Equivalent script (pass the same flags after the script name)
+uv run python scripts/optimize_prompts.py --task-lm granite4:3b --reflection-lm nemotron-mini:4b
 ```
 
 Optimized prompts are written to `src/sdlc_agents/prompts/optimized/<role>.txt`.  
 At runtime, agents load **optimized** prompts when present, otherwise **seed** prompts.
+
+Each optimize run also writes Markdown reports under `GEPA_REPORT_DIR` (default `artifacts/gepa/`):
+
+- `optimization_report.md` — combined report for the run
+- `<role>.md` — per-role detail: **input** (seed + train examples), **reflections** (reflection LM prompts/outputs and proposals), and **final selected prompt**
 
 ## Run the SDLC workflow
 
@@ -92,22 +106,33 @@ See [`.env.example`](.env.example):
 | `OLLAMA_HOST` | Ollama base URL |
 | `OLLAMA_ORCHESTRATOR_MODEL` | Model id for orchestrator |
 | `OLLAMA_WORKER_MODEL` | Model id for workers |
-| `GEPA_TASK_LM` | LiteLLM id, e.g. `ollama/llama3.1` |
-| `GEPA_REFLECTION_LM` | LiteLLM id for GEPA reflection |
-| `GEPA_MAX_METRIC_CALLS` | GEPA budget (keep small for local demos) |
-| `OUTPUT_DIR` / `ARTIFACTS_DIR` | Output paths |
+| `GEPA_TASK_LM` | Model prompts are optimized for (`ollama/<name>` or bare Ollama name) |
+| `GEPA_REFLECTION_LM` | Stronger model that proposes prompt rewrites |
+| `GEPA_MAX_METRIC_CALLS` | GEPA evaluation budget |
+| `GEPA_REFLECTION_MINIBATCH_SIZE` | Examples per reflection proposal |
+| `GEPA_CANDIDATE_SELECTION_STRATEGY` | e.g. `pareto`, `current_best` |
+| `GEPA_SEED` | RNG seed for GEPA |
+| `GEPA_DISPLAY_PROGRESS` | Show GEPA progress bar (`true`/`false`) |
+| `GEPA_PREFER_SEED_ON_TIE` | Keep seed when GEPA score does not improve |
+| `GEPA_DATA_DIR` | Train/val JSON datasets directory |
+| `GEPA_RUNS_DIR` | Per-role GEPA run state / logs |
+| `GEPA_REPORT_DIR` | Markdown optimization reports |
+| `OUTPUT_DIR` / `ARTIFACTS_DIR` | SPA and SDLC artifact paths |
 | `BYPASS_TOOL_CONSENT` | Non-interactive Strands tool use |
 
 ## Project layout
 
 ```
+config/roles.toml    # all SDLC roles (workers + orchestrator)
 src/sdlc_agents/     # package: config, orchestrator, workers, GEPA
 data/gepa/           # tiny train sets for prompt optimization
 scripts/             # thin CLI wrappers
-artifacts/           # generated PRD / design / tests / review
+artifacts/           # generated PRD / design / tests / review / GEPA reports
 output/spa/          # generated SPA
 uv.lock              # locked dependency versions (uv)
 ```
+
+Roles are defined in [`config/roles.toml`](config/roles.toml). Add or reorder entries there; the optimize CLI and GEPA defaults read from that file.
 
 ## Dependency management (uv)
 
